@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python preprocess.py
+    deps:
+    - path: data/raw/ts.csv
+      md5: d4b373291669f4954e6c4fb9f0fc5556
+      size: 186735
+    - path: preprocess.py
+      md5: 1fe657eb75a0cdcdfdeb48f3736f5b5b
+      size: 810
+    params:
+      params.yaml:
+        remote: gcs
+        rev: v2
+    outs:
+    - path: data/intermediate/ts_pp.csv
+      md5: aca3b95809e30e3c7e74bc49b2a89397
+      size: 5635

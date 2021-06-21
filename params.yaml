@@ -1,0 +1,6 @@
+remote: gcs
+
+rev: v2
+
+train:
+  param0: 42

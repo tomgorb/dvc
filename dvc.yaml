@@ -1,0 +1,11 @@
+stages:
+  preprocess:
+    cmd: python preprocess.py
+    deps:
+    - data/raw/ts.csv
+    - preprocess.py
+    params:
+    - remote
+    - rev
+    outs:
+    - data/intermediate/ts_pp.csv
