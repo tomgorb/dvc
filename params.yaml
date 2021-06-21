@@ -1,6 +1,6 @@
 remote: gcs
 
-rev: v1
+rev: v2
 
 train:
-  param0: 42
+  param0: 17
