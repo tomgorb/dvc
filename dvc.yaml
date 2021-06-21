@@ -9,3 +9,10 @@ stages:
     - rev
     outs:
     - data/intermediate/ts_pp.csv
+  train:
+    cmd: python train.py
+    deps:
+    - data/intermediate/ts_pp.csv
+    - train.py
+    params:
+    - train.param0

@@ -17,3 +17,15 @@ stages:
     - path: data/intermediate/ts_pp.csv
       md5: aca3b95809e30e3c7e74bc49b2a89397
       size: 5635
+  train:
+    cmd: python train.py
+    deps:
+    - path: data/intermediate/ts_pp.csv
+      md5: aca3b95809e30e3c7e74bc49b2a89397
+      size: 5635
+    - path: train.py
+      md5: c27e9637324d2b98ab32cbee8a6a05c7
+      size: 816
+    params:
+      params.yaml:
+        train.param0: 42
