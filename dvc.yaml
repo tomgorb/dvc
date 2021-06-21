@@ -19,4 +19,6 @@ stages:
     metrics:
     - artifacts/scores.json
     plots:
-    - artifacts/data.json
+    - artifacts/data.json:
+        x: X
+        y: y
