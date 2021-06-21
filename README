@@ -1,0 +1,142 @@
+=================
+# INIT REPO GIT #
+=================
+echo $'**.vscode\n**.csv\nvenv/' > .gitignore
+git init
+git add doc\ -\ DVC.pdf .gitignore rqmts.txt
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:......./dvc.git
+=================
+
+
+==================================
+# INIT REPO DVC + REMOTE STORAGE #
+==================================
+dvc init
+dvc remote add -d gcs gs://.............-dvc/
+dvc remote modify --local gcs credentialpath /tmp/sa.json
+git commit .dvc/config -m 'configure remote storage'
+git push -u origin main # --force
+==================================
+
+
+===========================
+# TRACK RAW DATA + TAG V1 #
+===========================
+dvc add data/raw/ts.csv
+dvc push -r gcs
+git add data/raw/ts.csv.dvc 
+git commit -m 'data: track input on GCS (v1)'
+git tag -a 'v1' -m 'input data v1'
+git push origin v1 main
+rm -rf data/raw/ts.csv .dvc/cache
+dvc pull -r gcs
+===========================
+
+
+===========================
+# NEW INPUT DATA + TAG V2 #
+===========================
+dvc add data/raw/ts.csv
+dvc push -r gcs
+git add data/raw/ts.csv.dvc
+git commit -m 'data: track input on GCS (v2)'
+git tag -a 'v2' -m 'input data v2'
+git push origin v2 main
+===========================
+
+
+=========================
+# CREATE A DVC PIPELINE #
+=========================
+  | Note that DVC does not pass the parameter values to stage commands. 
+  | The commands executed by DVC will have to load and parse the parameters file by itself.
+=========================
+
+    ==============
+    # PREPROCESS #
+    ==============
+    dvc run \
+        -n preprocess \
+        -p rev,remote \
+        -o data/intermediate/ts_pp.csv \
+        -d preprocess.py \
+        -d data/raw/ts.csv \
+        python preprocess.py
+    git add dvc.yaml dvc.lock params.yaml preprocess.py
+    dvc push
+    git commit -m 'pipeline: preprocess stage'
+    git push origin main
+    ==============
+
+    =========
+    # TRAIN #
+    =========
+    dvc run \
+        -n train \
+        -p train.param0 \
+        -d train.py \
+        -d data/intermediate/ts_pp.csv \
+        python train.py
+    git add dvc.yaml dvc.lock train.py
+    dvc push
+    git commit -m 'pipeline: train stage'
+    git push origin main
+    =========
+
+    ========================================
+    # ADD METRICS AND PLOTS TO TRAIN STAGE #
+    ========================================
+    dvc run --force \
+        --metrics artifacts/scores.json \
+        --plots artifacts/data.json \
+        -n train \
+        -p train.param0 \
+        -d train.py \
+        -d data/intermediate/ts_pp.csv \
+        python train.py
+    git add dvc.yaml dvc.lock artifacts/.gitignore 
+    dvc push
+    git commit -m 'pipeline: train stage --> add metrics and plots'
+    git push origin main
+    ========================================
+
+    ================
+    # MODIFY PLOTS #
+    ================
+    dvc plots modify artifacts/data.json -x X -y y
+    git add dvc.yaml
+    git commit -m "modify plots"
+    git push origin main
+    ================
+
+
+===========
+# NEW EXP #
+===========
+dvc exp run --set-param train.param0=42 --set-param rev=v1
+dvc push
+git add dvc.lock dvc.yaml params.yaml 
+git commit -m "change train.param0 and rev"
+git push origin main
+===========
+
+
+============
+# CHECKOUT #
+============
+
+    ========
+    # FULL #
+    ========
+    git checkout v1
+    dvc checkout 
+    ========
+
+    ===================
+    # SINGLE CHECKOUT #
+    ===================
+    git checkout v2 data/raw/ts.csv.dvc
+    dvc pull
+    ===================
