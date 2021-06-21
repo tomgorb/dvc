@@ -29,3 +29,10 @@ stages:
     params:
       params.yaml:
         train.param0: 42
+    outs:
+    - path: artifacts/data.json
+      md5: b3255a6d20a35bba5ca10d9b9729a654
+      size: 9256
+    - path: artifacts/scores.json
+      md5: 62f1c3880615c7a0eb62f6821c8a7cfa
+      size: 31

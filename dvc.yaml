@@ -16,3 +16,7 @@ stages:
     - train.py
     params:
     - train.param0
+    metrics:
+    - artifacts/scores.json
+    plots:
+    - artifacts/data.json
