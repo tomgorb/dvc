@@ -12,17 +12,17 @@ stages:
     params:
       params.yaml:
         remote: gcs
-        rev: v2
+        rev: v1
     outs:
     - path: data/intermediate/ts_pp.csv
-      md5: aca3b95809e30e3c7e74bc49b2a89397
-      size: 5635
+      md5: ace5c832a5c982e1707afa469ccda2ba
+      size: 9798
   train:
     cmd: python train.py
     deps:
     - path: data/intermediate/ts_pp.csv
-      md5: aca3b95809e30e3c7e74bc49b2a89397
-      size: 5635
+      md5: ace5c832a5c982e1707afa469ccda2ba
+      size: 9798
     - path: train.py
       md5: c27e9637324d2b98ab32cbee8a6a05c7
       size: 816
@@ -31,8 +31,8 @@ stages:
         train.param0: 42
     outs:
     - path: artifacts/data.json
-      md5: b3255a6d20a35bba5ca10d9b9729a654
-      size: 9256
+      md5: 3f0db3fabe6e7f9640ddf4efa46ea5bc
+      size: 16090
     - path: artifacts/scores.json
-      md5: 62f1c3880615c7a0eb62f6821c8a7cfa
-      size: 31
+      md5: fb39f86f571520220cd3ca0d180b5b9a
+      size: 32
